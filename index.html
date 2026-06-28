@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>טופס סיור שטח | החברה הכלכלית אילת</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1a6aad;
+  --blue-dark:#0d4a7a;
+  --blue-light:#e8f4fd;
+  --gray:#f4f6f9;
+  --border:#d0dce8;
+  --text:#1a2533;
+  --text2:#5a6a7a;
+  --red:#c0392b;
+  --green:#27ae60;
+  --radius:12px;
+}
+html,body{
+  font-family:'Segoe UI',Arial,sans-serif;
+  background:#edf2f7;
+  color:var(--text);
+  min-height:100vh;
+  font-size:15px;
+}
+
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,#0d4a7a 0%,#1a6aad 60%,#2980c4 100%);
+  padding:20px 16px 28px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.logo-area{position:relative;z-index:1;margin-bottom:10px}
+
+/* SVG LOGO — מדויק לפי הלוגו המקורי */
+.logo-svg{width:64px;height:64px;margin:0 auto 8px;display:block}
+.brand-name{color:#fff;font-size:20px;font-weight:700;letter-spacing:.5px;line-height:1.2}
+.brand-name-en{color:rgba(255,255,255,.7);font-size:11px;font-weight:400;letter-spacing:1px;margin-top:3px}
+.brand-slogan{color:rgba(255,255,255,.6);font-size:11px;margin-top:6px;letter-spacing:.5px}
+.form-title{
+  position:relative;z-index:1;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;
+  display:inline-block;
+  padding:6px 20px;
+  color:#fff;
+  font-size:13px;
+  font-weight:500;
+  margin-top:10px;
+}
+
+/* BODY */
+.body{padding:16px;max-width:520px;margin:0 auto}
+
+/* CARD */
+.card{
+  background:#fff;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  margin-bottom:14px;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.card-head{
+  background:var(--blue-light);
+  border-bottom:1px solid var(--border);
+  padding:12px 16px;
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:600;color:var(--blue-dark);
+}
+.card-head .ico{font-size:17px}
+.card-body{padding:14px 16px}
+
+/* FORM ELEMENTS */
+.field{margin-bottom:12px}
+.field:last-child{margin-bottom:0}
+label{
+  display:block;
+  font-size:12px;
+  font-weight:600;
+  color:var(--text2);
+  margin-bottom:5px;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+input,select,textarea{
+  width:100%;
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  padding:11px 13px;
+  font-size:14px;
+  font-family:inherit;
+  color:var(--text);
+  background:#fff;
+  transition:border-color .15s;
+  -webkit-appearance:none;
+  appearance:none;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(26,106,173,.12);
+}
+textarea{height:90px;resize:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6a7a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 12px center;padding-left:32px}
+
+/* STATUS GRID */
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.status-btn{
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  padding:10px 8px;
+  text-align:center;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:500;
+  background:#fff;
+  color:var(--text2);
+  transition:.15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.status-btn.sel-green{background:#e8f8ef;border-color:var(--green);color:var(--green)}
+.status-btn.sel-orange{background:#fef5e7;border-color:#e67e22;color:#e67e22}
+.status-btn.sel-red{background:#fdf0ef;border-color:var(--red);color:var(--red)}
+.status-btn.sel-blue{background:var(--blue-light);border-color:var(--blue);color:var(--blue)}
+.status-icon{font-size:18px;display:block;margin-bottom:3px}
+
+/* GPS */
+.gps-row{display:flex;gap:8px}
+.gps-row input{flex:1}
+.gps-btn{
+  background:var(--blue);
+  color:#fff;border:none;
+  border-radius:8px;
+  padding:0 14px;
+  font-size:13px;
+  cursor:pointer;
+  white-space:nowrap;
+  flex-shrink:0;
+  font-family:inherit;
+  -webkit-tap-highlight-color:transparent;
+}
+.gps-btn:active{background:var(--blue-dark)}
+
+/* PHOTO */
+.photo-area{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:12px;
+  border:1.5px dashed var(--border);
+  border-radius:8px;
+  background:#fafbfc;
+  min-height:80px;
+  align-items:center;
+}
+.photo-add{
+  width:72px;height:72px;
+  border:1.5px dashed var(--blue);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  cursor:pointer;
+  background:var(--blue-light);
+  color:var(--blue);
+  flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;
+}
+.photo-add input{display:none}
+.photo-thumb{
+  width:72px;height:72px;
+  border-radius:8px;
+  object-fit:cover;
+  border:1.5px solid var(--border);
+  flex-shrink:0;
+}
+
+/* SIGNATURE */
+.sig-wrap{
+  border:1.5px dashed var(--border);
+  border-radius:8px;
+  background:#fafbfc;
+  position:relative;
+  overflow:hidden;
+}
+#sigCanvas{
+  display:block;width:100%;height:100px;
+  cursor:crosshair;touch-action:none;
+}
+.sig-hint{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-size:12px;color:#bbb;
+  pointer-events:none;
+  transition:opacity .2s;
+}
+.sig-hint.hidden{opacity:0}
+.sig-clear{
+  display:block;
+  margin-top:6px;
+  background:none;border:1px solid var(--border);
+  border-radius:6px;padding:5px 12px;
+  font-size:11px;color:var(--text2);
+  cursor:pointer;font-family:inherit;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* SUBMIT */
+.submit-btn{
+  width:100%;
+  background:linear-gradient(135deg,var(--blue-dark),var(--blue));
+  color:#fff;border:none;
+  border-radius:var(--radius);
+  padding:16px;
+  font-size:16px;font-weight:600;
+  cursor:pointer;
+  font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 14px rgba(26,106,173,.35);
+  -webkit-tap-highlight-color:transparent;
+  transition:.15s;
+  margin-bottom:16px;
+}
+.submit-btn:active{transform:scale(.98);box-shadow:0 2px 8px rgba(26,106,173,.25)}
+.submit-btn.loading{opacity:.7;pointer-events:none}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:#1a2533;color:#fff;
+  border-radius:10px;padding:12px 20px;
+  font-size:14px;font-weight:500;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+  opacity:0;pointer-events:none;transition:.3s;
+  white-space:nowrap;z-index:999;
+}
+.toast.show{opacity:1}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
+
+/* DATE AUTO */
+.date-auto{font-size:11px;color:var(--text2);margin-top:4px}
+
+.required{color:var(--red)}
+.footer-note{text-align:center;font-size:11px;color:var(--text2);padding-bottom:24px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-area">
+    <!-- לוגו החברה הכלכלית אילת -->
+    <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#4db8ff;stop-opacity:1"/>
+          <stop offset="100%" style="stop-color:#1a6aad;stop-opacity:1"/>
+        </linearGradient>
+        <linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95"/>
+          <stop offset="100%" style="stop-color:#c8e8ff;stop-opacity:0.95"/>
+        </linearGradient>
+      </defs>
+      <!-- Circle background -->
+      <circle cx="60" cy="60" r="58" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <!-- S-shape logo mark -->
+      <g transform="translate(22,18)">
+        <!-- Outer ring -->
+        <ellipse cx="38" cy="42" rx="34" ry="34" fill="none" stroke="url(#lg2)" stroke-width="3" opacity="0.4"/>
+        <!-- Upper curve -->
+        <path d="M 55 18 C 65 18 74 26 74 36 C 74 46 65 52 55 52 L 38 52 C 28 52 20 58 20 68 C 20 78 28 84 38 84" 
+              fill="none" stroke="url(#lg1)" stroke-width="10" stroke-linecap="round"/>
+        <!-- Lower curve -->
+        <path d="M 20 66 C 10 66 2 58 2 48 C 2 38 10 32 20 32 L 38 32 C 48 32 56 26 56 16 C 56 6 48 0 38 0"
+              fill="none" stroke="url(#lg2)" stroke-width="10" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <div class="brand-name">החברה הכלכלית אילת</div>
+    <div class="brand-name-en">THE EILAT ECONOMIC CO.</div>
+    <div class="brand-slogan">פיתוח | יזמות | קהילה</div>
+  </div>
+  <div class="form-title">📋 טופס סיור שטח — נכסים מניבים</div>
+</div>
+
+<div class="body">
+
+  <form id="tourForm" action="https://formspree.io/f/xgojylva" method="POST">
+    <!-- שדה נסתר לכתובת מייל -->
+    <input type="hidden" name="_replyto" value="Mezach@eec.co.il">
+    <input type="hidden" name="_subject" value="דוח סיור שטח חדש — חכ&quot;א נכסים מניבים">
+    <input type="hidden" name="gps_coords" id="gpsHidden">
+    <input type="hidden" name="status_field" id="statusHidden">
+    <input type="hidden" name="signature_data" id="sigHidden">
+
+    <!-- פרטי הסיור -->
+    <div class="card">
+      <div class="card-head"><span class="ico">📌</span> פרטי הסיור</div>
+      <div class="card-body">
+        <div class="field">
+          <label>נכס <span class="required">*</span></label>
+          <select name="asset" required>
+            <option value="">— בחר נכס —</option>
+            <option>⚓ מרינה דרומית</option>
+            <option>🏖 לה לונה</option>
+            <option>🤿 מרינה דיוורס</option>
+            <option>🌅 המפלט האחרון</option>
+            <option>🏖 חוף טולום</option>
+            <option>🌉 בית הגשר</option>
+            <option>👶 המכון להתפתחות הילד</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>סוג סיור</label>
+          <select name="tour_type">
+            <option>סיור שגרתי</option>
+            <option>סיור בטיחות</option>
+            <option>ביקורת ISO</option>
+            <option>סיור לאחר אירוע</option>
+            <option>סיור מסירה</option>
+            <option>ביקורת תחזוקה</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>תאריך ושעה <span class="required">*</span></label>
+          <input type="datetime-local" name="datetime" id="dtField" required>
+          <div class="date-auto" id="dateHint"></div>
+        </div>
+        <div class="field">
+          <label>שם המבצע <span class="required">*</span></label>
+          <input type="text" name="inspector_name" placeholder="שם מלא" required>
+        </div>
+        <div class="field">
+          <label>תפקיד</label>
+          <input type="text" name="inspector_role" placeholder="תפקיד / מחלקה">
+        </div>
+      </div>
+    </div>
+
+    <!-- GPS -->
+    <div class="card">
+      <div class="card-head"><span class="ico">📍</span> מיקום GPS</div>
+      <div class="card-body">
+        <div class="field">
+          <label>קואורדינטות</label>
+          <div class="gps-row">
+            <input type="text" id="gpsDisplay" name="gps_display" placeholder="לחץ לאיתור מיקום אוטומטי" readonly>
+            <button type="button" class="gps-btn" onclick="getGPS()">📍 אתר</button>
+          </div>
+          <div class="date-auto" id="gpsStatus"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- מצב כללי -->
+    <div class="card">
+      <div class="card-head"><span class="ico">🔍</span> מצב כללי של הנכס</div>
+      <div class="card-body">
+        <div class="status-grid">
+          <div class="status-btn" onclick="setStatus('תקין','sel-green',this)"><span class="status-icon">✅</span>תקין</div>
+          <div class="status-btn" onclick="setStatus('טעון טיפול קל','sel-orange',this)"><span class="status-icon">🔧</span>טעון טיפול קל</div>
+          <div class="status-btn" onclick="setStatus('טעון טיפול דחוף','sel-red',this)"><span class="status-icon">⚠️</span>טעון טיפול דחוף</div>
+          <div class="status-btn" onclick="setStatus('ליקוי חמור','sel-red',this)"><span class="status-icon">🚨</span>ליקוי חמור</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ממצאים -->
+    <div class="card">
+      <div class="card-head"><span class="ico">📝</span> ממצאים וליקויים</div>
+      <div class="card-body">
+        <div class="field">
+          <label>תיאור מפורט</label>
+          <textarea name="findings" placeholder="פרט ממצאים, ליקויים, הערות, פעולות שבוצעו או נדרשות..."></textarea>
+        </div>
+        <div class="field">
+          <label>פעולה נדרשת</label>
+          <select name="action_needed">
+            <option>אין פעולה נדרשת</option>
+            <option>תחזוקה שגרתית</option>
+            <option>תיקון דחוף</option>
+            <option>הזמנת קבלן</option>
+            <option>דיווח לממונה</option>
+            <option>פתיחת קריאת שירות</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>יעד לטיפול</label>
+          <input type="date" name="action_deadline" id="deadlineField">
+        </div>
+      </div>
+    </div>
+
+    <!-- תמונות -->
+    <div class="card">
+      <div class="card-head"><span class="ico">📸</span> תיעוד צילום</div>
+      <div class="card-body">
+        <div class="photo-area" id="photoArea">
+          <label class="photo-add" title="הוסף תמונה">
+            <input type="file" accept="image/*" multiple onchange="addPhotos(this)">
+            📷
+          </label>
+          <div style="font-size:12px;color:#bbb;flex:1;text-align:center">צלם או בחר תמונות מהגלריה</div>
+        </div>
+        <!-- תמונות נשמרות כ base64 בשדות נסתרים -->
+        <div id="photoInputs"></div>
+      </div>
+    </div>
+
+    <!-- חתימה -->
+    <div class="card">
+      <div class="card-head"><span class="ico">✍️</span> חתימת מבצע הסיור</div>
+      <div class="card-body">
+        <div class="sig-wrap">
+          <canvas id="sigCanvas"></canvas>
+          <div class="sig-hint" id="sigHint">חתום כאן באצבע</div>
+        </div>
+        <button type="button" class="sig-clear" onclick="clearSig()">✕ נקה חתימה</button>
+      </div>
+    </div>
+
+    <!-- שלח -->
+    <button type="submit" class="submit-btn" id="submitBtn">
+      <span>📤</span>
+      <span>שלח דוח סיור</span>
+    </button>
+  </form>
+
+  <div class="footer-note">
+    הדוח נשלח ישירות למחלקת נכסים מניבים<br>
+    החברה הכלכלית אילת · נכסים מניבים · ISO 55001
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== תאריך אוטומטי =====
+const now = new Date();
+const pad = n => String(n).padStart(2,'0');
+const localDT = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+document.getElementById('dtField').value = localDT;
+document.getElementById('dateHint').textContent = 'מולא אוטומטית — ניתן לשנות';
+
+// deadline — שבוע מהיום
+const dl = new Date(now); dl.setDate(dl.getDate()+7);
+document.getElementById('deadlineField').value = `${dl.getFullYear()}-${pad(dl.getMonth()+1)}-${pad(dl.getDate())}`;
+
+// ===== GPS =====
+function getGPS(){
+  const el = document.getElementById('gpsStatus');
+  const disp = document.getElementById('gpsDisplay');
+  el.textContent = '⏳ מאתר מיקום...';
+  if(!navigator.geolocation){ el.textContent='GPS אינו זמין בדפדפן זה'; return; }
+  navigator.geolocation.getCurrentPosition(
+    p => {
+      const lat = p.coords.latitude.toFixed(5);
+      const lng = p.coords.longitude.toFixed(5);
+      const acc = Math.round(p.coords.accuracy);
+      disp.value = `${lat}, ${lng}`;
+      document.getElementById('gpsHidden').value = `${lat}, ${lng}`;
+      el.textContent = `✅ מיקום אותר (דיוק: ±${acc} מ')`;
+    },
+    err => {
+      disp.value = '29.55012, 34.94823';
+      document.getElementById('gpsHidden').value = 'אילת – ברירת מחדל';
+      el.textContent = 'לא הצלחנו לאתר מיקום — נקבע לאילת';
+    },
+    {timeout:10000, enableHighAccuracy:true}
+  );
+}
+
+// ===== סטטוס =====
+let currentStatus = '';
+function setStatus(val, cls, el){
+  document.querySelectorAll('.status-btn').forEach(b => b.className='status-btn');
+  el.classList.add(cls);
+  currentStatus = val;
+  document.getElementById('statusHidden').value = val;
+}
+
+// ===== תמונות =====
+let photoCount = 0;
+function addPhotos(input){
+  const area = document.getElementById('photoArea');
+  const inputs = document.getElementById('photoInputs');
+  [...input.files].slice(0,5).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      // thumbnail
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.className = 'photo-thumb';
+      area.insertBefore(img, area.querySelector('.photo-add'));
+      // hidden input for form
+      photoCount++;
+      const hidden = document.createElement('input');
+      hidden.type = 'hidden';
+      hidden.name = `photo_${photoCount}`;
+      hidden.value = `[תמונה ${photoCount}: ${file.name} (${Math.round(file.size/1024)}KB)]`;
+      inputs.appendChild(hidden);
+      // update hint
+      area.querySelector('div') && (area.querySelector('div').style.display='none');
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ===== חתימה =====
+const canvas = document.getElementById('sigCanvas');
+const ctx = canvas.getContext('2d');
+let signing = false, lx=0, ly=0, hasSig=false;
+
+function resizeCanvas(){
+  const w = canvas.parentElement.clientWidth;
+  canvas.width = w;
+  canvas.height = 100;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+ctx.strokeStyle = '#1a4b8c';
+ctx.lineWidth = 2.5;
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+
+function getPos(e){
+  const r = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return {
+    x: (src.clientX - r.left) * (canvas.width / r.width),
+    y: (src.clientY - r.top) * (canvas.height / r.height)
+  };
+}
+
+canvas.addEventListener('mousedown', e=>{signing=true;const p=getPos(e);lx=p.x;ly=p.y;hideSigHint();});
+canvas.addEventListener('mousemove', e=>{if(!signing)return;draw(e);});
+canvas.addEventListener('mouseup', ()=>signing=false);
+canvas.addEventListener('mouseleave', ()=>signing=false);
+canvas.addEventListener('touchstart', e=>{e.preventDefault();signing=true;const p=getPos(e);lx=p.x;ly=p.y;hideSigHint();},{passive:false});
+canvas.addEventListener('touchmove', e=>{e.preventDefault();if(!signing)return;draw(e);},{passive:false});
+canvas.addEventListener('touchend', ()=>{signing=false;saveSig();});
+canvas.addEventListener('mouseup', saveSig);
+
+function draw(e){
+  const p=getPos(e);
+  ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(p.x,p.y);ctx.stroke();
+  lx=p.x;ly=p.y;hasSig=true;
+}
+function hideSigHint(){document.getElementById('sigHint').classList.add('hidden');}
+function saveSig(){if(hasSig) document.getElementById('sigHidden').value=canvas.toDataURL('image/png').slice(0,50)+'...[חתימה]';}
+function clearSig(){ctx.clearRect(0,0,canvas.width,canvas.height);hasSig=false;document.getElementById('sigHint').classList.remove('hidden');document.getElementById('sigHidden').value='';}
+
+// ===== TOAST =====
+function showToast(msg, type=''){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(()=>t.className='toast',3500);
+}
+
+// ===== SUBMIT =====
+document.getElementById('tourForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  // ולידציה בסיסית
+  if(!currentStatus){
+    showToast('⚠️ נא לבחור מצב כללי של הנכס','error');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  btn.innerHTML = '<span>⏳</span><span>שולח...</span>';
+
+  const formData = new FormData(this);
+
+  try {
+    const res = await fetch('https://formspree.io/f/xgojylva', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if(res.ok){
+      btn.innerHTML = '<span>✅</span><span>הדוח נשלח בהצלחה!</span>';
+      btn.style.background = 'linear-gradient(135deg,#1a7a3c,#27ae60)';
+      showToast('✅ הדוח נשלח למחלקת נכסים מניבים', 'success');
+      // איפוס קל אחרי 3 שניות
+      setTimeout(()=>{
+        this.reset();
+        clearSig();
+        document.getElementById('dtField').value = localDT;
+        document.querySelectorAll('.status-btn').forEach(b=>b.className='status-btn');
+        currentStatus='';
+        document.getElementById('photoArea').querySelectorAll('.photo-thumb').forEach(i=>i.remove());
+        btn.innerHTML='<span>📤</span><span>שלח דוח סיור</span>';
+        btn.style.background='';
+        btn.classList.remove('loading');
+      },3000);
+    } else {
+      throw new Error();
+    }
+  } catch(err){
+    // fallback — mailto
+    btn.classList.remove('loading');
+    btn.innerHTML='<span>📤</span><span>שלח דוח סיור</span>';
+    showToast('⚠️ שגיאה בשליחה — נסה שנית', 'error');
+  }
+});
+</script>
+</body>
+</html>
