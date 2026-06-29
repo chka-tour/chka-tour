@@ -1013,10 +1013,10 @@ function openModal(type){
     document.getElementById('na-docs').addEventListener('change',function(){
       document.getElementById('na-doc-names').textContent=[...this.files].map(f=>f.name).join(' · ');
     });
-  }
+  } else if(type==='fault'){
     m.innerHTML=`<h3>⚠️ הוסף דיווח תקלה</h3>
       <div class="fg">
-        <div class="ff"><label>נכס *</label><select id="mf-asset"><option value="">—</option>${ASSETS.map(a=>`<option>${a}</option>`).join('')}</select></div>
+        <div class="ff"><label>נכס *</label><select id="mf-asset"><option value="">—</option>${ASSETS.map(a=>'<option>'+a+'</option>').join('')}</select></div>
         <div class="ff"><label>סוג תקלה *</label><select id="mf-type"><option>בטיחות</option><option>ניקיון</option><option>תשתיות</option><option>חשמל</option><option>אינסטלציה</option><option>מבנה</option><option>ציוד</option><option>זכיין</option><option>אחר</option></select></div>
         <div class="ff"><label>עדיפות *</label><select id="mf-pri"><option>גבוהה</option><option>בינונית</option><option>נמוכה</option><option>להמשך מעקב</option></select></div>
         <div class="ff"><label>תאריך</label><input type="date" id="mf-date"></div>
@@ -1086,11 +1086,11 @@ function renderAssets(){
       <div class="acard-cat">${a.cat}</div>
       <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">
         <span class="p ${sc}">${a.status}</span>
-        ${faults>0?`<span class="p p-o">${faults} תקלות</span>`:''}
-        ${a.docs.length>0?`<span class="p p-b">📎 ${a.docs.length} מסמכים</span>`:''}
+        ${faults>0?'<span class="p p-o">'+faults+' תקלות</span>':''}
+        ${a.docs.length>0?'<span class="p p-b">📎 '+a.docs.length+' מסמכים</span>':''}
       </div>
       <div class="acard-stats">
-        ${a.area!=='—'?`<div class="as"><strong>${a.area}</strong>מ"ר</div>`:''}
+        ${a.area!=='—'?'<div class="as"><strong>'+a.area+'</strong>מ&quot;ר</div>':''}
         <div class="as"><strong>${open}</strong>פתוחות</div>
         <div class="as"><strong>${a.docs.length}</strong>מסמכים</div>
       </div>
@@ -1110,7 +1110,7 @@ function renderAssets(){
     });
   }
   // update all asset selects
-  const opts = `<option value="">— בחר נכס —</option>${ASSET_LIST.map(a=>`<option>${a.name}</option>`).join('')}`;
+  const opts = `<option value="">— בחר נכס —</option>${ASSET_LIST.map(a=>'<option>'+a.name+'</option>').join('')}`;
   ['t-asset','f-asset','th-asset','r-asset','mf-asset'].forEach(id=>{
     const el=document.getElementById(id);
     if(el){ const v=el.value; el.innerHTML=opts.replace('— בחר נכס —','כל הנכסים').replace('value=""','value="כל הנכסים"'); el.value=v||''; }
@@ -1128,7 +1128,7 @@ function openAsset(id){
     <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
       <span class="p ${sc}">${a.status}</span>
       <span class="p p-b">${a.cat}</span>
-      ${a.area!=='—'?`<span class="p p-gray">${a.area} מ"ר</span>`:''}
+      ${a.area!=='—'?'<span class="p p-gray">'+a.area+' מ&quot;ר</span>':''}
     </div>
     <div class="sdiv" style="margin-bottom:10px">📎 מסמכים ורישיונות</div>
     <div id="doc-list" style="margin-bottom:10px">${renderDocList(a)}</div>
@@ -1139,11 +1139,7 @@ function openAsset(id){
     </label>
     <div class="sdiv" style="margin-bottom:10px">⚠️ תקלות אחרונות (${faults.length})</div>
     <div style="max-height:180px;overflow-y:auto">
-      ${faults.length?faults.slice(0,8).map(f=>`
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
-          <span>${f.desc.slice(0,50)}${f.desc.length>50?'...':''}</span>
-          <span class="p ${PP.priority(f.priority)}">${f.priority}</span>
-        </div>`).join(''):'<div style="font-size:12px;color:var(--text2);padding:8px 0">אין תקלות פתוחות ✓</div>'}
+      ${faults.length?faults.slice(0,8).map(f=>'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px"><span>'+f.desc.slice(0,50)+(f.desc.length>50?'...':'')+'</span><span class="p '+PP.priority(f.priority)+'">'+f.priority+'</span></div>').join(''):'<div style="font-size:12px;color:var(--text2);padding:8px 0">אין תקלות פתוחות ✓</div>'}
     </div>
     <div class="sdiv" style="margin-bottom:10px;margin-top:14px">📝 הערות</div>
     <textarea id="asset-notes" rows="2" style="width:100%;border:1.5px solid var(--border);border-radius:7px;padding:9px;font-size:13px;resize:none" placeholder="הערות, מידע נוסף על הנכס...">${a.notes||''}</textarea>
