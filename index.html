@@ -170,19 +170,52 @@ tbody tr:hover td{background:#f8fafc}
 /* ── EXPORT BAR ── */
 .export-bar{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 
-@media(max-width:900px){
-  #sb{width:56px}
-  .sb-sub,.sb-assets,.sb-foot,.ni span{display:none}
-  .sb-badge{font-size:14px}
-  .ni{justify-content:center;padding:10px}
-  #main{margin-right:56px}
+@media(max-width:768px){
+  /* Hide desktop sidebar completely on mobile */
+  #sb{display:none}
+  #main{margin-right:0}
+  /* Show bottom nav */
+  #mobile-nav{display:flex}
+  /* Adjust content for bottom nav */
+  .content{padding:12px 12px 80px}
   .kpi-grid{grid-template-columns:1fr 1fr}
   .g2,.g3,.g4{grid-template-columns:1fr}
   .fg{grid-template-columns:1fr}
   .ttype-grid{grid-template-columns:1fr 1fr}
   .tb-right .tag{display:none}
-  .content{padding:12px}
+  .topbar{padding:10px 12px}
+  .tb-title{font-size:15px}
 }
+@media(min-width:769px){
+  #mobile-nav{display:none!important}
+}
+
+/* ── MOBILE BOTTOM NAV ── */
+#mobile-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--white);
+  border-top:1px solid var(--border);
+  z-index:100;
+  padding-bottom:env(safe-area-inset-bottom,0);
+}
+.mn-scroll{
+  display:flex;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.mn-scroll::-webkit-scrollbar{display:none}
+.mn-item{
+  display:flex;flex-direction:column;align-items:center;
+  padding:8px 10px;min-width:64px;
+  font-size:10px;color:var(--text2);cursor:pointer;
+  border-top:2px solid transparent;white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;gap:3px;
+  flex-shrink:0;
+}
+.mn-item.on{color:var(--blue);border-top-color:var(--blue);font-weight:600}
+.mn-item .mico{font-size:20px}
 </style>
 </head>
 <body>
@@ -1198,6 +1231,27 @@ renderAssets();
 renderFaults();
 renderTourHistory();
 runReport();
+
+// ── MOBILE NAV ──
+function goMobile(name, el){
+  go(name, document.querySelector('.ni[onclick*="' + name + '"]'));
+  document.querySelectorAll('.mn-item').forEach(m=>m.classList.remove('on'));
+  if(el) el.classList.add('on');
+}
 </script>
+
+<!-- MOBILE BOTTOM NAV -->
+<div id="mobile-nav">
+  <div class="mn-scroll">
+    <div class="mn-item on" id="mn-dash" onclick="goMobile('dash',this)"><span class="mico">🏠</span>בקרה</div>
+    <div class="mn-item" id="mn-new-tour" onclick="goMobile('new-tour',this)"><span class="mico">📍</span>סיור חדש</div>
+    <div class="mn-item" id="mn-tour-history" onclick="goMobile('tour-history',this)"><span class="mico">📋</span>היסטוריה</div>
+    <div class="mn-item" id="mn-faults" onclick="goMobile('faults',this)"><span class="mico">⚠️</span>תקלות</div>
+    <div class="mn-item" id="mn-equipment" onclick="goMobile('equipment',this)"><span class="mico">🔧</span>ציוד</div>
+    <div class="mn-item" id="mn-assets" onclick="goMobile('assets',this)"><span class="mico">🏢</span>נכסים</div>
+    <div class="mn-item" id="mn-reports" onclick="goMobile('reports',this)"><span class="mico">📊</span>דוחות</div>
+    <div class="mn-item" id="mn-iso" onclick="goMobile('iso',this)"><span class="mico">📋</span>ISO</div>
+  </div>
+</div>
 </body>
 </html>
