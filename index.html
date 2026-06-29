@@ -170,9 +170,9 @@ tbody tr:hover td{background:#f8fafc}
 /* ── EXPORT BAR ── */
 .export-bar{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 
-@media(max-width:768px){
+@media(max-width:900px){
   /* Hide desktop sidebar completely on mobile */
-  #sb{display:none}
+  #sb{display:none!important}
   #main{margin-right:0}
   /* Show bottom nav */
   #mobile-nav{display:flex}
@@ -186,7 +186,7 @@ tbody tr:hover td{background:#f8fafc}
   .topbar{padding:10px 12px}
   .tb-title{font-size:15px}
 }
-@media(min-width:769px){
+@media(min-width:901px){
   #mobile-nav{display:none!important}
 }
 
@@ -999,15 +999,91 @@ function quickReport(type){
 // ══ EXPORT CSV ══
 function exportCSV(data, name){
   if(!data||!data.length){alert('אין נתונים לייצוא');return;}
-  const keys=Object.keys(data[0]);
-  const bom='\uFEFF';
-  const csv=bom+[keys,...data.map(r=>keys.map(k=>`"${String(r[k]||'').replace(/"/g,'""')}"`))]
-    .map(r=>r.join(',')).join('\n');
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download=`חכא_${name}_${new Date().toLocaleDateString('he-IL').replace(/\//g,'-')}.csv`;
+
+  // Column definitions with Hebrew headers
+  const COL_MAP = {
+    id:'#', date:'תאריך', asset:'נכס', type:'סוג תקלה',
+    desc:'תיאור', priority:'עדיפות', status:'סטטוס',
+    name:'מבצע', action:'טיפול נדרש',
+    // tours
+    type:'סוג סיור', status_gen:'מצב כללי', notes:'ממצאים',
+    // equipment
+    item:'פריט', loc:'מיקום', last:'בדיקה אחרונה',
+    next:'בדיקה הבאה', checker:'בודק'
+  };
+
+  const keys = Object.keys(data[0]);
+  const hebrewHeaders = keys.map(k => COL_MAP[k] || k);
+
+  // Priority colors for Excel (using background colors via inline style trick)
+  const PRIORITY_COLORS = {
+    'גבוהה': 'FFE0E0',
+    'בינונית': 'FFF3CD',
+    'נמוכה': 'E8F4FF',
+    'תקין': 'E8F5E9',
+    'להמשך מעקב': 'F3F3F3'
+  };
+
+  // Build HTML table styled for Excel
+  const today = new Date().toLocaleDateString('he-IL');
+  const title = name.replace(/_/g,' ');
+
+  let html = `
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="UTF-8">
+<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+<x:Name>דוח חכא</x:Name>
+<x:WorksheetOptions><x:DisplayRightToLeft/></x:WorksheetOptions>
+</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+<style>
+  body { font-family: Arial, sans-serif; direction: rtl; }
+  table { border-collapse: collapse; width: 100%; }
+  .title-row td { background: #1a5fa8; color: white; font-size: 14pt; font-weight: bold; padding: 10px; }
+  .date-row td { background: #e8f2fc; color: #0d3d6e; font-size: 10pt; padding: 4px 10px; }
+  th { background: #1a5fa8; color: white; padding: 8px; border: 1px solid #0d3d6e; font-size: 10pt; text-align: right; }
+  td { padding: 7px 8px; border: 1px solid #d0dce8; font-size: 10pt; vertical-align: middle; }
+  tr:nth-child(even) td { background: #f5f8fc; }
+  .pri-high { background: #FFE0E0; }
+  .pri-med { background: #FFF3CD; }
+  .pri-low { background: #E8F4FF; }
+  .pri-ok { background: #E8F5E9; }
+  .status-open { color: #d4700a; font-weight: bold; }
+  .status-closed { color: #1e7d3a; font-weight: bold; }
+</style>
+</head>
+<body dir="rtl">
+<table>
+  <tr class="title-row"><td colspan="${keys.length}">📋 דוח חכ"א — ${title}</td></tr>
+  <tr class="date-row"><td colspan="${keys.length}">החברה הכלכלית אילת | מחלקת נכסים מניבים | הופק: ${today}</td></tr>
+  <tr>${hebrewHeaders.map(h=>'<th>'+h+'</th>').join('')}</tr>
+  ${data.map(row=>{
+    const pri = row.priority||'';
+    const priClass = pri==='גבוהה'?'pri-high':pri==='בינונית'?'pri-med':pri==='תקין'?'pri-ok':pri==='נמוכה'?'pri-low':'';
+    const cells = keys.map(k=>{
+      let val = String(row[k]||'');
+      let cls = '';
+      if(k==='priority') cls = priClass;
+      if(k==='status') cls = val==='פתוח'?'status-open':val==='סגור'||val==='הושלם'?'status-closed':'';
+      return '<td class="'+cls+'">'+val+'</td>';
+    });
+    return '<tr class="'+priClass+'">'+cells.join('')+'</tr>';
+  }).join('')}
+  <tr><td colspan="${keys.length}" style="background:#e8f2fc;font-size:9pt;color:#64748b;padding:6px">
+    סה"כ: ${data.length} רשומות | ISO 55001 · ISO 45001 · ISO 9001 · ISO 14001
+  </td></tr>
+</table>
+</body></html>`;
+
+  const blob = new Blob(['\uFEFF' + html], {type:'application/vnd.ms-excel;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'חכא_' + name + '_' + today.replace(/\//g,'-') + '.xls';
   a.click();
+  URL.revokeObjectURL(url);
 }
+
 
 // ══ MODAL ══
 function openModal(type){
